@@ -1,0 +1,82 @@
+upstream openerpweb {
+	server 127.0.0.1:8069 weight=1 fail_timeout=300s;
+}
+
+server {
+	listen 80;
+	server_name ilvostro.dominio.com;
+
+	# Strict Transport Security
+	add_header Strict-Transport-Security max-age=2592000;
+
+	rewrite ^/.*$ https://$host$request_uri? permanent;
+}
+
+
+server {
+	# server port and name
+	listen        443 default;
+	server_name   ilvostro.dominio.com;
+	# if ($allowed_country = no) {
+	#	return 444;
+	# }
+	
+
+	# ssl log files
+	access_log    /var/log/nginx/ssl-access.log;
+	error_log    /var/log/nginx/ssl-error.log;
+
+	# ssl certificate files
+	ssl on;
+	ssl_certificate /etc/ssl/openerpssl/openerp.crt;
+	ssl_certificate_key /etc/ssl/openerpssl/openerp.key;
+
+
+	# add ssl specific settings
+	keepalive_timeout    60;
+
+	# limit ciphers
+	ssl_ciphers            HIGH:!ADH:!MD5;
+	ssl_protocols            SSLv3 TLSv1;
+	ssl_prefer_server_ciphers    on;
+
+	# increase proxy buffer to handle some OpenERP Web client requests
+	proxy_buffers 32 128k;
+	proxy_buffer_size 256k;
+
+	client_max_body_size 0;
+
+	location / {
+		proxy_pass    http://openerpweb;
+		# force timeouts if one of backend dies
+		proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
+
+		# set headers
+#        proxy_set_header Host $host;
+		proxy_set_header Host $http_host;
+		
+		proxy_set_header X-Real-IP $remote_addr;
+
+	proxy_set_header X-Forwarded-Host $http_host;
+
+		proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+
+
+		# Let OpenERP Web client known that we're using HTTPS, otherwise
+		# it will generate url using http:// and not https://
+		proxy_set_header X-Forwarded-Proto https;
+
+		# by default, do not forward anything
+		proxy_redirect off;
+	}
+
+	# cache some static data in memory for 60mins.
+	# under heavy load this will preserve the OpenERP Web client a little bit.
+	location ~* ^/(openerp|openobject)/static/ {
+		proxy_cache_valid 200 60m;
+		proxy_buffering    on;
+		expires 864000;
+		proxy_pass http://openerpweb;
+	}
+
+}
