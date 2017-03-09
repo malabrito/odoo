@@ -27,9 +27,9 @@ sudo apt-get install -y python-pip
 sudo pip install -y pyserial==2.7 psycogreen==1.0 pyusb==1.0.0b1 qrcode==5.0.1 Pillow==2.5.1 boto==2.38.0 oerplib==0.8.4 jcconv==0.2.3 pytz==2014.4 num2words
 
 # Instala o Odoo através da clonagem do repositório GitHub
-su - odoo
+su - odoo <<'EOF'
 git clone -b 8.0 git@github.com:OCA/OCB.git
-exit
+EOF
 
 # Configurações de log e do serivdor
 #mkdir /opt/odoo/config_odoo

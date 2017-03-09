@@ -3,7 +3,7 @@
 # Instalação de módulos adicionais para a localidade brasileira
 
 # Muda para usuário odoo
-sudo su - odoo -s /bin/bash
+sudo su - odoo -s /bin/bash <<'EOF'
 
 # Instalação do módulo PMIS (Gerenciamento de projetos)
 cd /opt/odoo/
@@ -24,7 +24,7 @@ cd /opt/odoo/locales
 git clone https://github.com/odoo-brazil/odoo-brazil-eletronic-documents.git --branch 8.0 --depth 1
 
 # Sai do usuário odoo
-exit
+EOF
 
 # Módulo para relatórios em pdf
 cd /tmp
