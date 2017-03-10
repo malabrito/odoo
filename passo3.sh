@@ -18,7 +18,6 @@ mv -f ~/installOdoo/sources.list /etc/apt/sources.list
 sudo apt-get install postgresql -y
 #createuser --createdb --username postgres --no-createrole --no-superuser --pwprompt odoo
 su - postgres -c "createuser -s odoo" 2> /dev/null || true
-exit
 
 # Dependências python do odoo
 sudo apt-get install -y python-imaging python-passlib python-dateutil python-feedparser python-gdata python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil wget python-unittest2 python-mock python-jinja2 python-dev libpq-dev poppler-utils python-pdftools antiword ca-certificates python-six binutils cpp cpp-4.7 gcc-4.7 libgmp10 libgomp1 libitm1 libmpfr4 libquadmath0 python-crypto python-egenix-mxtools python-httplib2 python-keyring python-launchpadlib python-lazr.restfulclient python-lazr.uri python-oauth python-wadllib python-xdg python-zope.interface python-beautifulsoup python-decorator python-requests python-pypdf python-bs4 python-unidecode
